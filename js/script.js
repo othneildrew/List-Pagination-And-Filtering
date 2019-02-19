@@ -63,7 +63,7 @@ function addSearchInput() {
 
   // Append elements and place in DOM
   studentSearch.append(searchInput);
-  //studentSearch.append(searchBtn);
+  studentSearch.append(searchBtn);
   pageHeader.append(studentSearch);
   pageHeader.append(resultsText);
 }
@@ -82,12 +82,21 @@ function search() {
 
   for(let i = 0; i < students.length; i++) {
 
-    let studentName = students[i].querySelectorAll('.student-details h3')[0].textContent;
-    let studentEmail = students[i].querySelectorAll('.student-details span.email')[0].textContent;
+    let studentName = students[i].querySelectorAll('.student-details h3')[0];
+    let studentEmail = students[i].querySelectorAll('.student-details span.email')[0];
 
     // Check if student name or email match search input
-    if(studentName.match(searchInput.value) || studentEmail.match(searchInput.value)) {
+    if(studentName.textContent.match(searchInput.value) || studentEmail.textContent.match(searchInput.value)) {
       students[i].style.display = 'block';
+
+      // Highlight section of text that matches search
+        // Adopted: http://talkerscode.com/webtricks/highlight-words-on-search-using-javascript.php
+      let highlightedName = studentName.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
+      let highlightedEmail = studentEmail.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
+
+      studentName.innerHTML = highlightedName;
+      studentEmail.innerHTML = highlightedEmail;
+
       num++;
     } else {
       students[i].style.display = 'none';
@@ -97,8 +106,12 @@ function search() {
 
   }
 
-  resultsText.textContent = 'Showing ' + num + ' search results';
-  //resultsText.style.
+
+  if(num > 0) {
+    resultsText.textContent = 'Showing ' + num + ' search results';
+  } else {
+    resultsText.textContent = 'There were no results matching your search';
+  }
   pageHeader.append(resultsText);
 
 
