@@ -113,7 +113,7 @@ function search() {
   appendPageLinks(indexes, 1);
 
   // Show page with search results starting at page 1
-  showPage(indexes, 1, true);
+  showPage(indexes, 1);
 }
 
 
@@ -122,9 +122,9 @@ function search() {
   * Take a given 'list' of students and a given page. Loop through
   * each instance of the items in 'list' and show based on its index.
   **/
-function showPage(indexArray, page, search = false) {
+function showPage(indexArray, page) {
   /*
-    Range start and end calculates the range of items to
+    Range start/end calculates the range of items to
     display based on the page limit
   */
   let rangeStart = (page * pageLimit) - pageLimit - 1;
