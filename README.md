@@ -34,6 +34,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+[![https://www.othneildrew.com][product-screenshot]](https://www.othneildrew.com)
+
 This project is part of the Team Treehouse [Full Stack JavaScript Techdegree](https://join.teamtreehouse.com/techdegree/) program.
 
 ### Built With
@@ -86,3 +88,8 @@ Project Link: [https://github.com/othneildrew/List-Pagination-And-Filtering](htt
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 * [GitHub Pages](https://pages.github.com)
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[product-screenshot]: https://www.othneildrew.com/images/projects/list-pagination.jpg
