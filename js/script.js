@@ -2,28 +2,17 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 const pageContainer = document.getElementsByClassName('page')[0];
 const studentList = document.getElementsByClassName('student-list')[0];
 const students = studentList.getElementsByClassName('student-item');
-let studentsArray = Array.prototype.slice.call(students);
+const pageLimit = 10;
 let indexes = Array();
-let pageLimit = 10;
-
-
-
-
-
-
 
 init();
 
 
-
 /***
-  * Initializes the program and sets the
-  * inital state of the application.
+  * Initializes the program and sets the inital state of the application.
   **/
 function init() {
   let page = 1;
@@ -84,53 +73,47 @@ function search() {
   let searchInput = document.querySelectorAll('.student-search input')[0];
   let resultsText = document.querySelectorAll('.page-header p')[0];
 
-  console.log('search input:::', searchInput.value.length);
+  indexes = Array();
 
-  if(searchInput.value.length > 0) {
-    indexes = Array();;
+  for(let i = 0; i < students.length; i++) {
+    let studentName = students[i].querySelectorAll('.student-details h3')[0];
+    let studentEmail = students[i].querySelectorAll('.student-details span.email')[0];
 
-    for(let i = 0; i < students.length; i++) {
+    students[i].style.display = 'none';
 
-      let studentName = students[i].querySelectorAll('.student-details h3')[0];
-      let studentEmail = students[i].querySelectorAll('.student-details span.email')[0];
+    // Check if student name or email match search input
+    if(studentName.textContent.match(searchInput.value) || studentEmail.textContent.match(searchInput.value)) {
+      indexes.push(i);
 
-      students[i].style.display = 'none';
+      // Highlight section of text that matches search
+        // Adopted: http://talkerscode.com/webtricks/highlight-words-on-search-using-javascript.php
+      let highlightedName = studentName.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
+      let highlightedEmail = studentEmail.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
 
-      // Check if student name or email match search input
-      if(studentName.textContent.match(searchInput.value) || studentEmail.textContent.match(searchInput.value)) {
-        indexes.push(i);
-
-        students[i].style.display = 'block';
-
-        // Highlight section of text that matches search
-          // Adopted: http://talkerscode.com/webtricks/highlight-words-on-search-using-javascript.php
-        let highlightedName = studentName.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
-        let highlightedEmail = studentEmail.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
-
-        studentName.innerHTML = highlightedName;
-        studentEmail.innerHTML = highlightedEmail;
-
-      } else {
-        //students[i].style.display = 'none';
-      }
+      studentName.innerHTML = highlightedName;
+      studentEmail.innerHTML = highlightedEmail;
     }
-
-    console.log(students);
-
-    if(indexes.length > 0) {
-      resultsText.textContent = 'Showing ' + indexes.length + ' search results';
-    } else {
-      resultsText.textContent = 'There were no results matching your search';
-    }
-    pageHeader.append(resultsText);
-
-    let pagination = document.getElementsByClassName('pagination')[0];
-    pageContainer.removeChild(pagination);
-    appendPageLinks(indexes, 1);
-
-    showPage(indexes, 1, true);
   }
 
+  // Create search results and append to page based on results
+  if(indexes.length === students.length) {
+    resultsText.textContent = '';
+  }
+  else if(indexes.length > 0) {
+    resultsText.textContent = 'Showing ' + indexes.length + ' search results';
+  } else {
+    resultsText.textContent = 'There were no results matching your search';
+  }
+
+  pageHeader.append(resultsText);
+
+  // Dynamically recreate pagination links
+  let pagination = document.getElementsByClassName('pagination')[0];
+  pageContainer.removeChild(pagination);
+  appendPageLinks(indexes, 1);
+
+  // Show page with search results starting at page 1
+  showPage(indexes, 1, true);
 }
 
 
@@ -141,72 +124,21 @@ function search() {
   **/
 function showPage(indexArray, page, search = false) {
   /*
-    Display start and end calculates the range of items to
+    Range start and end calculates the range of items to
     display based on the page limit
   */
-  //let displayStart = (page * pageLimit) - pageLimit - 1;
-  //let displayEnd = page * pageLimit - 1;
-  console.log('search value'+search);
-
-
   let rangeStart = (page * pageLimit) - pageLimit - 1;
   let rangeEnd = page * pageLimit - 1;
 
-  console.log(rangeStart, rangeEnd);
+  for(let i = 0; i < indexArray.length; i++) {
+    let indexToShow = indexArray[i];
 
-  /*for (let i = rangeStart; i < rangeEnd; i++) {
-
-    //console.log(i);
-
-    if(indexArray.includes(i)) {
-      students[i].style.display = 'block';
+    if(indexArray.indexOf(indexToShow) > rangeStart && indexArray.indexOf(indexToShow) <= rangeEnd) {
+      students[indexToShow].style.display = 'block';
     } else {
-      students[i].style.display = 'none';
-
+      students[indexToShow].style.display = 'none';
     }
-
-  }*/
-  console.log('this is index array below...');
-  console.log(indexArray);
-
-
-  // Loop and display if within start and end range
-  console.log('indexArray Length ==' + indexArray.length);
-
-
-
-
-  /*
-  for (let i = 0; i < indexArray.length; i++ ) {
-    //console.log(indexes[i]);
-
-    //students[i].style.display = 'none';
-
-    console.log('search value', search);
-
-    if(search) {
-      studentsArray.forEach(function(element) {
-        if(studentsArray.indexOf(indexes[element]) > rangeStart && studentsArray.indexOf(indexes[element]) <= rangeEnd) {
-          students[i].style.display = 'block';
-        } else {
-          students[i].style.display = 'none';
-        }
-      });
-    } else {
-      if(indexArray.indexOf(indexes[i]) > rangeStart && indexArray.indexOf(indexes[i]) <= rangeEnd) {
-        students[i].style.display = 'block';
-      } else {
-        students[i].style.display = 'none';
-      }
-    }
-
-
-
-
-
-  }*/
-
-
+  }
 }
 
 
