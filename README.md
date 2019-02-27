@@ -5,7 +5,7 @@
   <h3 align="center">List-Pagination-And-Filtering</h3>
 
   <p align="center">
-    Employing progressive enhancement principles to improve the usability of a webpage using JavaScript for pagination, search filtering, and keyword highlighting.
+    Employing progressive enhancement principles to improve the usability of a web page using JavaScript for pagination, search filtering, and keyword highlighting.
     <br />s
     <a href="https://www.othneildrew.com/List-Pagination-And-Filtering"><strong>View Demo</strong></a>
     <br />
@@ -70,7 +70,7 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
