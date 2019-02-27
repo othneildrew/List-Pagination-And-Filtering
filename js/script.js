@@ -6,7 +6,9 @@ FSJS project 2 - List Filter and Pagination
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 const pageContainer = document.getElementsByClassName('page')[0];
 const studentList = document.getElementsByClassName('student-list')[0];
-
+const students = studentList.getElementsByClassName('student-item');
+let studentsArray = Array.prototype.slice.call(students);
+let indexes = Array();
 let pageLimit = 10;
 
 
@@ -26,9 +28,13 @@ init();
 function init() {
   let page = 1;
 
-  showPage(studentList, page);
+  for(let i = 0; i < students.length; i++) {
+    indexes.push(i);
+  }
 
-  appendPageLinks(studentList, page);
+  showPage(indexes, page);
+
+  appendPageLinks(indexes, page);
 
   addSearchInput();
 }
@@ -77,45 +83,53 @@ function search() {
   const pageHeader = document.getElementsByClassName('page-header')[0];
   let searchInput = document.querySelectorAll('.student-search input')[0];
   let resultsText = document.querySelectorAll('.page-header p')[0];
-  let students = studentList.getElementsByClassName('student-item');
-  let num = 0;
 
-  for(let i = 0; i < students.length; i++) {
+  console.log('search input:::', searchInput.value.length);
 
-    let studentName = students[i].querySelectorAll('.student-details h3')[0];
-    let studentEmail = students[i].querySelectorAll('.student-details span.email')[0];
+  if(searchInput.value.length > 0) {
+    indexes = Array();;
 
-    // Check if student name or email match search input
-    if(studentName.textContent.match(searchInput.value) || studentEmail.textContent.match(searchInput.value)) {
-      students[i].style.display = 'block';
+    for(let i = 0; i < students.length; i++) {
 
-      // Highlight section of text that matches search
-        // Adopted: http://talkerscode.com/webtricks/highlight-words-on-search-using-javascript.php
-      let highlightedName = studentName.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
-      let highlightedEmail = studentEmail.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
+      let studentName = students[i].querySelectorAll('.student-details h3')[0];
+      let studentEmail = students[i].querySelectorAll('.student-details span.email')[0];
 
-      studentName.innerHTML = highlightedName;
-      studentEmail.innerHTML = highlightedEmail;
-
-      num++;
-    } else {
       students[i].style.display = 'none';
+
+      // Check if student name or email match search input
+      if(studentName.textContent.match(searchInput.value) || studentEmail.textContent.match(searchInput.value)) {
+        indexes.push(i);
+
+        students[i].style.display = 'block';
+
+        // Highlight section of text that matches search
+          // Adopted: http://talkerscode.com/webtricks/highlight-words-on-search-using-javascript.php
+        let highlightedName = studentName.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
+        let highlightedEmail = studentEmail.textContent.replace(searchInput.value, '<span class="highlighted">'+ searchInput.value +'</span>');
+
+        studentName.innerHTML = highlightedName;
+        studentEmail.innerHTML = highlightedEmail;
+
+      } else {
+        //students[i].style.display = 'none';
+      }
     }
 
+    console.log(students);
 
+    if(indexes.length > 0) {
+      resultsText.textContent = 'Showing ' + indexes.length + ' search results';
+    } else {
+      resultsText.textContent = 'There were no results matching your search';
+    }
+    pageHeader.append(resultsText);
 
+    let pagination = document.getElementsByClassName('pagination')[0];
+    pageContainer.removeChild(pagination);
+    appendPageLinks(indexes, 1);
+
+    showPage(indexes, 1, true);
   }
-
-
-  if(num > 0) {
-    resultsText.textContent = 'Showing ' + num + ' search results';
-  } else {
-    resultsText.textContent = 'There were no results matching your search';
-  }
-  pageHeader.append(resultsText);
-
-
-
 
 }
 
@@ -125,25 +139,74 @@ function search() {
   * Take a given 'list' of students and a given page. Loop through
   * each instance of the items in 'list' and show based on its index.
   **/
-function showPage(list, page) {
-  let students = list.getElementsByClassName('student-item');
+function showPage(indexArray, page, search = false) {
   /*
     Display start and end calculates the range of items to
     display based on the page limit
   */
-  let displayStart = (page * pageLimit) - pageLimit - 1;
-  let displayEnd = page * pageLimit - 1;
-  let num = 0;
+  //let displayStart = (page * pageLimit) - pageLimit - 1;
+  //let displayEnd = page * pageLimit - 1;
+  console.log('search value'+search);
 
-  // Loop and display if within display start and end range
-  for (let i = 0; i < students.length; i++ ) {
-    if(num > displayStart && num <= displayEnd) {
+
+  let rangeStart = (page * pageLimit) - pageLimit - 1;
+  let rangeEnd = page * pageLimit - 1;
+
+  console.log(rangeStart, rangeEnd);
+
+  /*for (let i = rangeStart; i < rangeEnd; i++) {
+
+    //console.log(i);
+
+    if(indexArray.includes(i)) {
       students[i].style.display = 'block';
     } else {
       students[i].style.display = 'none';
+
     }
-    num++;
-  }
+
+  }*/
+  console.log('this is index array below...');
+  console.log(indexArray);
+
+
+  // Loop and display if within start and end range
+  console.log('indexArray Length ==' + indexArray.length);
+
+
+
+
+  /*
+  for (let i = 0; i < indexArray.length; i++ ) {
+    //console.log(indexes[i]);
+
+    //students[i].style.display = 'none';
+
+    console.log('search value', search);
+
+    if(search) {
+      studentsArray.forEach(function(element) {
+        if(studentsArray.indexOf(indexes[element]) > rangeStart && studentsArray.indexOf(indexes[element]) <= rangeEnd) {
+          students[i].style.display = 'block';
+        } else {
+          students[i].style.display = 'none';
+        }
+      });
+    } else {
+      if(indexArray.indexOf(indexes[i]) > rangeStart && indexArray.indexOf(indexes[i]) <= rangeEnd) {
+        students[i].style.display = 'block';
+      } else {
+        students[i].style.display = 'none';
+      }
+    }
+
+
+
+
+
+  }*/
+
+
 }
 
 
@@ -152,10 +215,7 @@ function showPage(list, page) {
   * Takes a give number of items in 'list', creates pagination links,
   * adds it to the DOM based on the specified 'pageLimit'.
   **/
-function appendPageLinks(list, page) {
-  const totalItems = list.childElementCount;
-  const pagesTotal = Math.ceil(totalItems / pageLimit);
-
+function appendPageLinks(indexArray, page) {
   // Create div element with class of pagination
   let pageLinksContainer = document.createElement('div');
   pageLinksContainer.setAttribute('class', 'pagination');
@@ -164,7 +224,10 @@ function appendPageLinks(list, page) {
   let pageLinks = document.createElement('ul');
   pageLinksContainer.append(pageLinks);
 
-  // Dynamically create buttons based on items in a given 'list'
+  let totalItems = indexes.length;
+  let pagesTotal = Math.ceil(totalItems / pageLimit);
+
+  // Dynamically create button links if items exceed page limit
   for(let i = 1; i <= pagesTotal; i++) {
     let listItem = document.createElement('li');
     let button = document.createElement('a');
@@ -181,7 +244,7 @@ function appendPageLinks(list, page) {
       }
       // Set active class on clicked button
       page = e.target.getAttribute('href');
-      showPage(studentList, page);
+      showPage(indexes, page);
       e.target.setAttribute('class', 'active');
     });
 
@@ -192,6 +255,7 @@ function appendPageLinks(list, page) {
       button.setAttribute('class', 'active');
     }
   }
+
   // Append pagination links to DOM
   pageContainer.append(pageLinksContainer);
 }
