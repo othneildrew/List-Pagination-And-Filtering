@@ -34,9 +34,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![List-Pagination-And-Filtering Project Screenshot][product-screenshot]](https://github.com/othneildrew/List-Pagination-And-Filtering)
+[![List-Pagination-And-Filtering Project Screenshot][product-screenshot]](https://www.othneildrew.com/List-Pagination-And-Filtering)
 
-This project is part of the Team Treehouse [Full Stack JavaScript Techdegree](https://join.teamtreehouse.com/techdegree/) program.
+This project is part of the Team Treehouse [Full Stack JavaScript Techdegree](https://join.teamtreehouse.com/techdegree) program.
 
 ### Built With
 
